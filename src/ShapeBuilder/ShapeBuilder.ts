@@ -28,10 +28,7 @@ export class Cylinder extends Shape {
   }
 
   calculateVolume(): number {
-    return parseInt(
-      (Math.PI * this.radius * this.radius * this.height).toFixed(2),
-      10
-    );
+    return Number((Math.PI * this.radius ** 2 * this.height).toFixed(2));
   }
 }
 

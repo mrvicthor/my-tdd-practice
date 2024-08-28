@@ -8,7 +8,7 @@ describe("ShapeBuilder", () => {
 
   it("should return the volume of a cylinder", () => {
     const cylinder = new Cylinder(6, 5);
-    expect(cylinder.calculateVolume()).toBe(471);
+    expect(cylinder.calculateVolume()).toBe(471.24);
   });
 
   it("should return the volume of a pyramid", () => {
