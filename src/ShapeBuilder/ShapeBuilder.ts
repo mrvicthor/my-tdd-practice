@@ -1,17 +1,20 @@
-class ShapeBuilder {
-  public height: number;
-  constructor(height: number) {
-    this.height = height;
-  }
+interface VolumeCalculable {
+  calculateVolume(): number;
 }
 
-export class Cube extends ShapeBuilder {
-  private width: number;
-  private length: number;
-  constructor(height: number, width: number, length: number) {
+abstract class Shape implements VolumeCalculable {
+  constructor(protected readonly height: number) {}
+
+  abstract calculateVolume(): number;
+}
+
+export class Cube extends Shape {
+  constructor(
+    height: number,
+    private readonly width: number,
+    private readonly length: number
+  ) {
     super(height);
-    this.width = width;
-    this.length = length;
   }
 
   calculateVolume(): number {
@@ -19,11 +22,9 @@ export class Cube extends ShapeBuilder {
   }
 }
 
-export class Cylinder extends ShapeBuilder {
-  private radius: number;
-  constructor(height: number, radius: number) {
+export class Cylinder extends Shape {
+  constructor(height: number, private readonly radius: number) {
     super(height);
-    this.radius = radius;
   }
 
   calculateVolume(): number {
@@ -34,11 +35,9 @@ export class Cylinder extends ShapeBuilder {
   }
 }
 
-export class Pyramid extends ShapeBuilder {
-  private base: number;
-  constructor(height: number, base: number) {
+export class Pyramid extends Shape {
+  constructor(height: number, private readonly base: number) {
     super(height);
-    this.base = base;
   }
 
   calculateVolume(): number {
