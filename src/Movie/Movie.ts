@@ -1,40 +1,42 @@
-export interface ReviewProps {
-  title: string;
-  rating: number;
-  text: string;
-  reviewer: string;
+class Review {
+  constructor(
+    public rating: number,
+    public text: string,
+    public reviewer: string = "Anonymous"
+  ) {
+    if (rating < 1 || rating > 5) {
+      throw new Error("Rating must be between 1 and 5");
+    }
+  }
 }
 
 export default class Movie {
-  private reviews: ReviewProps[];
-  constructor(
-    private readonly title: string,
-    private readonly rating: number,
-    private readonly text: string,
-    private readonly reviewer: string = "Anonymous"
-  ) {
-    this.reviews = [];
-  }
+  private reviews: Review[] = [];
+  constructor(public title: string) {}
 
-  getReviewer(): string {
-    return this.reviewer;
-  }
-
-  get list(): ReviewProps[] {
+  get list() {
     return this.reviews;
   }
 
-  addReview(item: ReviewProps): void {
-    this.reviews = [...this.reviews, item];
+  addReview(rating: number, text: string, reviewer?: string): void {
+    this.reviews.push(new Review(rating, text, reviewer));
   }
 
-  calculateAverageRating(value: string): number {
-    const ratings = this.reviews.filter(
-      (item: ReviewProps) => item.title === value
-    );
+  averageRating(): number {
+    if (this.reviews.length === 0) {
+      return 0;
+    }
     return (
-      ratings.reduce((acc: number, item: ReviewProps) => acc + item.rating, 0) /
-      ratings.length
+      this.reviews.reduce((acc, review) => acc + review.rating, 0) /
+      this.reviews.length
     );
+  }
+
+  generateReport(): Record<number, number> {
+    const report: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+    this.reviews.forEach((review) => {
+      report[review.rating]++;
+    });
+    return report;
   }
 }

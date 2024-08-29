@@ -1,69 +1,49 @@
-import Movie, { ReviewProps } from "../Movie/Movie";
+import Movie from "../Movie/Movie";
 
 describe("Movie", () => {
-  let movie: Movie;
+  let movie1: Movie;
+  let movie2: Movie;
   beforeEach(() => {
-    movie = new Movie("", 0, "", "");
-  });
-  it("should return Anonymous if no name is given", () => {
-    const movie = new Movie("The Abyss", 1, "Boring movie");
-    expect(movie.getReviewer()).toBe("Anonymous");
+    movie1 = new Movie("The Matrix");
+    movie2 = new Movie("The Matrix Reloaded");
   });
 
-  it("should return the given name if given", () => {
-    const movie = new Movie("The Abyss", 1, "Boring movie", "John Doe");
-    expect(movie.getReviewer()).toBe("John Doe");
+  it("should have a title", () => {
+    expect(movie1.title).toBe("The Matrix");
   });
 
-  it("should add a movie with review", () => {
-    const item: ReviewProps = {
-      title: "Superman",
-      rating: 2,
-      text: "Super Hero",
-      reviewer: "Victor",
-    };
-
-    movie.addReview(item);
-
-    const item2: ReviewProps = {
-      title: "X-Men",
-      rating: 3,
-      text: "Marvel Studio",
-      reviewer: "James",
-    };
-
-    movie.addReview(item2);
-
-    expect(movie.list.length).toBe(2);
+  it("should add a review", () => {
+    movie1.addReview(5, "John Doe", "This is a great movie!");
+    expect(movie1.list.length).toBe(1);
   });
 
-  it("should calculate average rating for a movie", () => {
-    const item: ReviewProps = {
-      title: "The Flash",
-      rating: 3,
-      text: "Fastest Man",
-      reviewer: "John",
-    };
+  it("should accept a review even if the reviewer is not provided", () => {
+    movie1.addReview(5, "This is a great movie!", undefined);
+    expect(movie1.list.length).toBe(1);
+  });
 
-    movie.addReview(item);
+  it("should return the average rating for a movie", () => {
+    movie1.addReview(4, "Great movie!");
+    movie1.addReview(3, "Not so great");
+    expect(movie1.averageRating()).toBe(3.5);
+  });
 
-    const item1: ReviewProps = {
-      title: "The Flash",
-      rating: 4,
-      text: "Very fast",
-      reviewer: "Maxwell",
-    };
+  it("should throw an error if the rating is not between 1 and 5", () => {
+    expect(() => movie1.addReview(0, "Non sense!")).toThrow();
+    expect(() => movie1.addReview(6, "Great movie!")).toThrow();
+  });
 
-    movie.addReview(item1);
-
-    const item2: ReviewProps = {
-      title: "Spiderman",
-      rating: 5,
-      text: "Spidey",
-      reviewer: "Zuby",
-    };
-
-    movie.addReview(item2);
-    expect(movie.calculateAverageRating("The Flash")).toBe(3.5);
+  it("should return a report with the number of reviews for each rating", () => {
+    movie1.addReview(4, "Great movie!");
+    movie1.addReview(3, "Not so great");
+    movie1.addReview(3, "okay");
+    movie1.addReview(2, "Meh");
+    expect(movie1.generateReport()).toEqual({
+      1: 0,
+      2: 1,
+      3: 2,
+      4: 1,
+      5: 0,
+    });
   });
 });
